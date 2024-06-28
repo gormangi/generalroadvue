@@ -150,48 +150,4 @@ const topCategorySort = async () => {
   state.topCategoryList.forEach((i, idx) => i.categoryOrder = idx + 1);
   await $fetch('/api/category/saveTopCategoryOrder', {method:'post', body: state.topCategoryList});
 }
-
-/*export default {
-  name: "AdminIndex",
-  layout: 'adminDefault',
-  components: {
-    Footer,
-    LogoHeader,
-    SideBar,
-    draggable
-  },
-  data() {
-    return {
-      topCategoryList: []
-    }
-  },
-  computed: {
-    dragOptions() {
-      return {
-        animation: 200,
-        group: "description",
-        disabled: false,
-        ghostClass: "ghost"
-      };
-    }
-  },
-  async mounted() {
-    this.topCategoryList = await this.$axios.$post('/api/category/getTopCategoryList', {});
-  },
-  methods: {
-    topCateModifyBtn() {
-      alert('ddd');
-    },
-    topCateDeleteBtn() {
-      alert('asef1');
-    },
-    viewChildCategory() {
-      alert('222');
-    },
-    async topCategorySort() {
-      this.topCategoryList.forEach((i, idx) => i.categoryOrder = idx + 1);
-      await this.$axios.$post('/api/category/saveTopCategoryOrder', this.topCategoryList);
-    }
-  }
-}*/
 </script>
