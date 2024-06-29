@@ -79,10 +79,10 @@ const methods = {
       return false;
     }
     await $fetch('/api/category/insertChildCategoryInfo', {method:'post', body: state});
-    router.push('/admin/AdminIndex');
+    router.back();
   },
   childCategoryAddCancel()  {
-    router.push('/admin/AdminIndex');
+    router.back();
   }
 }
 

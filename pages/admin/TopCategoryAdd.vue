@@ -81,10 +81,10 @@ const methods = {
       alert('상위카테고리는 6개를 초과하여 추가할 수 없습니다');
       return false;
     }
-    router.push('/admin/AdminIndex');
+    router.back();
   },
   topCategoryAddCancel() {
-    router.push('/admin/AdminIndex');
+    router.back();
   }
 }
 </script>

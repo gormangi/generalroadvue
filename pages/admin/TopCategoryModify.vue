@@ -83,10 +83,10 @@ const methods = {
       return false;
     }
     await $fetch('/api/category/updateCategoryInfo', {method: 'PUT', body: state});
-    router.push('/admin/AdminIndex');
+    router.back();
   },
   topCategoryModifyCancel() {
-    router.push('/admin/AdminIndex');
+    router.back();
   }
 }
 </script>
