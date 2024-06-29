@@ -10,10 +10,10 @@
         />
       </NuxtLink>
       <div class="nav-toggle">
-        <button class="btn btn-toggle toggle-sidebar">
+        <button @click="sideNavToggle" class="btn btn-toggle toggle-sidebar">
           <i class="gg-menu-right"></i>
         </button>
-        <button class="btn btn-toggle sidenav-toggler">
+        <button @click="sideNavToggle" class="btn btn-toggle sidenav-toggler">
           <i class="gg-menu-left"></i>
         </button>
       </div>
@@ -22,7 +22,13 @@
 </template>
 
 <script setup>
-
+function sideNavToggle() {
+  if(!document.querySelector('html').classList.contains('nav_open')) {
+    document.querySelector('html').className += ' nav_open';
+  } else {
+    document.querySelector('html').classList.remove('nav_open');
+  }
+}
 </script>
 
 <style scoped>

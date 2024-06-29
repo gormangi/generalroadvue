@@ -7,8 +7,8 @@
     <!-- Navbar Start -->
     <div class="container-fluid mb-5">
       <div class="row border-top px-xl-5">
-        <LeftNav :topCategoryList="state.topCategoryList" :childCategoryList="state.childCategoryList"/>
-        <CenterNav :topCategoryList="state.topCategoryList" :childCategoryList="state.childCategoryList"/>
+        <LeftNav :mainTopCategoryList="state.mainTopCategoryList" :mainChildCategoryList="state.mainChildCategoryList"/>
+        <CenterNav :mainTopCategoryList="state.mainTopCategoryList" :mainChildCategoryList="state.mainChildCategoryList"/>
       </div>
     </div>
     <!-- Navbar End -->
@@ -215,12 +215,12 @@ import {reactive} from "vue";
 import {useAsyncData} from "nuxt/app";
 
 const state = reactive({
-  topCategoryList: [],
-  childCategoryList: []
+  mainTopCategoryList: [],
+  mainChildCategoryList: []
 });
 
 const { data, refresh, error } = await useAsyncData('indexAsyncData', () => $fetch('/api/main'));
-state.topCategoryList = data._value.topCategoryList;
-state.childCategoryList = data._value.childCategoryList;
+state.mainTopCategoryList = data._value.mainTopCategoryList;
+state.mainChildCategoryList = data._value.mainChildCategoryList;
 
 </script>

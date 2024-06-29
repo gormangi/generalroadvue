@@ -1,10 +1,50 @@
 <template>
-  <div>
-    <slot />
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <SideBar />
+    <!-- End Sidebar -->
+    <div class="main-panel">
+      <div class="main-header">
+        <!-- Logo Header -->
+        <LogoHeader />
+        <!-- End Logo Header -->
+        <!-- Navbar Header -->
+        <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+        >
+          <div class="container-fluid">
+            <nav
+                class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex"
+            >
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button type="submit" class="btn btn-search pe-1">
+                    <i class="fa fa-search search-icon"></i>
+                  </button>
+                </div>
+                <input
+                    type="text"
+                    placeholder="Search ..."
+                    class="form-control"
+                />
+              </div>
+            </nav>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+      <div class="container" @click="methods.closeSideNav">
+        <slot/>
+      </div>
+      <Footer />
+    </div>
   </div>
 </template>
 
 <script setup>
+  import SideBar from "/components/admin/SideBar";
+  import LogoHeader from "/components/admin/LogoHeader";
+  import Footer from "/components/admin/Footer";
   import {onMounted} from "vue";
 
   useHead({
@@ -23,10 +63,10 @@
     ],
     script: [
       {src: '/assets/js/plugin/webfont/webfont.min.js'},
-      {src: '/assets/js/core/jquery-3.7.1.min.js'},
+      //{src: '/assets/js/core/jquery-3.7.1.min.js'},
       //{src: '/assets/js/core/popper.min.js'},
       {src: '/assets/js/core/bootstrap.min.js'},
-      {src: '/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'},
+      //{src: '/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'},
       //{src: '/assets/js/plugin/chart.js/chart.min.js'},
       //{src: '/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js'},
       //{src: '/assets/js/plugin/chart-circle/circles.min.js'},
@@ -34,7 +74,7 @@
       //{src: '/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js'},
       //{src: '/assets/js/plugin/jsvectormap/jsvectormap.min.js'},
       //{src: '/assets/js/plugin/jsvectormap/world.js'},
-      {src: '/assets/js/kaiadmin.min.js'}
+      //{src: '/assets/js/kaiadmin.min.js'}
     ]
   })
 
@@ -55,6 +95,12 @@
       }
     });
   });
+
+  const methods = {
+    closeSideNav() {
+      document.querySelector('html').classList.remove('nav_open');
+    }
+  }
 
 </script>
 

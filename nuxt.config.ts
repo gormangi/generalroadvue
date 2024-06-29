@@ -1,12 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// @ts-ignore
 export default defineNuxtConfig({
 
   devtools: {enabled: false},
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
-    'public/css/reset.css',
-    'public/css/style.css'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -21,7 +20,7 @@ export default defineNuxtConfig({
   nitro: {
     routeRules: {
       "/api/**": {
-        proxy: "http://146.56.114.49:14010/**",
+        proxy: "http://localhost:14010/**",
       },
     },
   },

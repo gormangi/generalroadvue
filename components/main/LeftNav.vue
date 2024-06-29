@@ -6,12 +6,12 @@
     </a>
     <nav class="collapse show navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0" id="navbar-vertical">
       <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-        <template v-for="item in topCategoryList">
+        <template v-for="item in mainTopCategoryList">
           <template v-if="item.childCategoryCnt">
             <div class="nav-item dropdown">
               <a href="javascript:void(0)" class="nav-link" data-toggle="dropdown">{{ item.categoryName }} <i class="fa fa-angle-down float-right mt-1"></i></a>
               <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                <template v-for="i in childCategoryList">
+                <template v-for="i in mainChildCategoryList">
                   <template v-if="i.parentCategoryIdx === item.categoryIdx">
                     <a href="javascript:void(0)" @click="moveProductList(item.categoryIdx)" class="dropdown-item">{{ i.categoryName }}</a>
                   </template>
@@ -34,10 +34,10 @@
   const router = useRouter();
 
   const props = defineProps({
-    topCategoryList: {
+    mainTopCategoryList: {
       type: Array
     },
-    childCategoryList: {
+    mainChildCategoryList: {
       type: Array
     }
   });

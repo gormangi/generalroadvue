@@ -9,12 +9,12 @@
       </button>
       <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
         <div class="navbar-nav mr-auto py-0">
-          <template v-for="item in topCategoryList" key="topCategoryKey">
+          <template v-for="item in mainTopCategoryList" key="topCategoryKey">
             <template v-if="item.childCategoryCnt">
               <div class="nav-item dropdown">
                 <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown">{{ item.categoryName }}</a>
                 <div class="dropdown-menu rounded-0 m-0">
-                  <template v-for="i in childCategoryList" key="childCategoryKey">
+                  <template v-for="i in mainChildCategoryList" key="childCategoryKey">
                     <template v-if="i.parentCategoryIdx === item.categoryIdx">
                       <a href="javascript:void(0)" @click="moveProductList(item.categoryIdx)" class="dropdown-item">{{ i.categoryName }}</a>
                     </template>
@@ -26,10 +26,6 @@
               <a href="javascript:void(0)" @click="moveProductList(item.categoryIdx)" class="nav-item nav-link">{{ item.categoryName }}</a>
             </template>
           </template>
-        </div>
-        <div class="navbar-nav ml-auto py-0">
-          <a href="" class="nav-item nav-link">Login</a>
-          <a href="" class="nav-item nav-link">Register</a>
         </div>
       </div>
     </nav>
@@ -77,10 +73,10 @@
   const router = useRouter();
 
   const props = defineProps({
-    topCategoryList: {
+    mainTopCategoryList: {
       type: Array
     },
-    childCategoryList: {
+    mainChildCategoryList: {
       type: Array
     }
   });
