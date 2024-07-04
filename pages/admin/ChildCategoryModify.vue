@@ -24,6 +24,30 @@
                 </div>
                 <br/>
                 <div class="form-group">
+                  <label for="categoryThumbnail" style="padding-right: 8px;">썸네일 이미지</label>
+                  <input
+                      type="file"
+                      class="form-control-file"
+                      id="categoryThumbnail"
+                      name="categoryThumbnail"
+                      accept="image/jpeg, image/jpg, image/png, image/gif"
+                      ref="categoryThumbnailRef"
+                      @input="handleFileInput"
+                      @change="modifyFileReg = true"
+                      style="display:none"
+                  />
+                  <div class="input-group">
+                    <button class="btn btn-black btn-border" type="button" @click="methods.thumbnailBtnClick">
+                      이미지 업로드
+                    </button>
+                    <input v-show="modifyFileReg === false" type="text" :value="previewFile.name" class="form-control" readonly="readonly" aria-describedby="basic-addon1">
+                    <img v-show="modifyFileReg === false" :src="previewFile.content" alt="" class="imagecheck-image">
+                    <input v-show="modifyFileReg === true" v-for="file in files" type="text" :value="file.name" class="form-control" readonly="readonly" aria-describedby="basic-addon1">
+                    <img v-show="modifyFileReg === true" v-for="file in files" :src="file.content" alt="" class="imagecheck-image">
+                  </div>
+                </div>
+                <br/>
+                <div class="form-group">
                   <label>카테고리 사용 여부</label><br />
                   <div class="d-flex">
                     <div class="form-check">
@@ -62,10 +86,15 @@ const router = useRouter();
 const state = reactive({
   categoryIdx: '',
   categoryName: '',
-  categoryUseYn: ''
+  categoryUseYn: '',
+  categoryThumbnail: {}
 });
-const categoryNameRef = ref(null);
 const receiveParam = router.currentRoute.value.query;
+const categoryNameRef = ref(null);
+const categoryThumbnailRef = ref(null);
+const {handleFileInput, files} = useFileStorage();
+let previewFile = ref({});
+let modifyFileReg = false;
 
 onMounted(() => {
   methods.modifyInit(receiveParam.categoryIdx);
@@ -77,6 +106,7 @@ const methods = {
     state.categoryIdx = categoryIdx;
     state.categoryName = data.categoryName;
     state.categoryUseYn = data.categoryUseYn;
+    previewFile.value = {name: data.categoryThumbnailVO.originalFileName, content: data.categoryThumbnailVO.filePath};
   },
   async childCategoryModify() {
     if (!state.categoryName) {
@@ -84,11 +114,23 @@ const methods = {
       categoryNameRef.value.focus();
       return false;
     }
+    files.value.forEach((file) => {
+      state.categoryThumbnailVO = {
+        fileContent: file.content,
+        fileName: file.name,
+        fileSize: file.size,
+        fileExtentionName: file.name.split('.')[1],
+        fileType: file.type
+      }
+    });
     await $fetch('/api/category/updateCategoryInfo', {method: 'PUT', body: state});
     router.back();
   },
   childCategoryModifyCancel() {
     router.back();
+  },
+  thumbnailBtnClick() {
+    categoryThumbnailRef.value.click();
   }
 }
 </script>

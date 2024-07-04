@@ -13,6 +13,7 @@ export default defineNuxtConfig({
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+      'nuxt-file-storage'
   ],
 
   ssr: true,

@@ -23,6 +23,27 @@
                 </div>
                 <br/>
                 <div class="form-group">
+                  <label for="categoryThumbnail" style="padding-right: 8px;">썸네일 이미지</label>
+                  <input
+                      type="file"
+                      class="form-control-file"
+                      id="categoryThumbnail"
+                      name="categoryThumbnail"
+                      accept="image/jpeg, image/jpg, image/png, image/gif"
+                      ref="categoryThumbnailRef"
+                      @input="handleFileInput"
+                      style="display:none"
+                  />
+                  <div class="input-group">
+                    <button class="btn btn-black btn-border" type="button" @click="methods.thumbnailBtnClick">
+                      이미지 업로드
+                    </button>
+                    <input v-for="file in files" type="text" :value="file.name" class="form-control" readonly="readonly" aria-describedby="basic-addon1">
+                    <img v-for="file in files" :src="file.content" alt="" class="imagecheck-image">
+                  </div>
+                </div>
+                <br/>
+                <div class="form-group">
                   <label>카테고리 사용 여부</label><br />
                   <div class="d-flex">
                     <div class="form-check">
@@ -52,7 +73,6 @@
 <script setup>
 import {useRouter} from "nuxt/app";
 import {onMounted, reactive, ref} from "vue";
-
 definePageMeta({
   layout: 'admin-default'
 });
@@ -61,10 +81,13 @@ const router = useRouter();
 const state = reactive({
   parentCategoryIdx: '',
   categoryName: '',
-  categoryUseYn: ''
+  categoryUseYn: '',
+  categoryThumbnail: {}
 });
 const receiveParam = router.currentRoute.value.query;
 const categoryNameRef = ref(null);
+const categoryThumbnailRef = ref(null);
+const {handleFileInput, files} = useFileStorage();
 
 onMounted(() => {
   state.categoryUseYn = 'Y';
@@ -78,11 +101,28 @@ const methods = {
       categoryNameRef.value.focus();
       return false;
     }
+    if (files.value.length < 1) {
+      alert('썸네일을 반드시 등록해야 합니다');
+      categoryThumbnailRef.value.focus();
+      return false;
+    }
+    files.value.forEach((file) => {
+      state.categoryThumbnailVO = {
+        fileContent: file.content,
+        fileName: file.name,
+        fileSize: file.size,
+        fileExtentionName: file.name.split('.')[1],
+        fileType: file.type
+      }
+    });
     await $fetch('/api/category/insertChildCategoryInfo', {method:'post', body: state});
     router.back();
   },
   childCategoryAddCancel()  {
     router.back();
+  },
+  thumbnailBtnClick() {
+    categoryThumbnailRef.value.click();
   }
 }
 

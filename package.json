@@ -14,5 +14,8 @@
     "nuxt": "^3.12.2",
     "vue": "latest",
     "vuedraggable": "^4.1.0"
+  },
+  "devDependencies": {
+    "nuxt-file-storage": "^0.2.6"
   }
 }
