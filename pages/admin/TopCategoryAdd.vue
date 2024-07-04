@@ -1,6 +1,9 @@
 <template>
   <div class="page-inner">
-    <div class="page-header">
+    <div v-show="isLoading" class="loading-overlay">
+      <img src="/img/loading/VZvw.gif" alt="Loading..." />
+    </div>
+    <div class="page-header" :class="{'content-disabled': isLoading}">
       <h3 class="fw-bold mb-3">카테고리 추가</h3>
     </div>
     <div class="row">
@@ -75,11 +78,13 @@
 <script setup>
 import {useRouter} from "nuxt/app";
 import {onMounted, reactive, ref} from "vue";
+import { useLoading } from '@/composables/useLoading';
 definePageMeta({
   layout: 'admin-default'
 });
 
 const router = useRouter();
+const { isLoading, startLoading, stopLoading } = useLoading();
 const state = reactive({
   categoryName: '',
   categoryUseYn: '',
@@ -114,7 +119,8 @@ const methods = {
         fileType: file.type
       }
     });
-    const res = await $fetch('/api/category/insertTopCategoryInfo', {method:'post', body: state});
+    startLoading();
+    const res = await $fetch('/api/category/insertTopCategoryInfo', {method:'post', body: state}).finally(() => stopLoading());
     if (res === 'topCategoryFull') {
       alert('상위카테고리는 6개를 초과하여 추가할 수 없습니다');
       return false;

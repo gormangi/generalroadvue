@@ -1,6 +1,9 @@
 <template>
   <div class="page-inner">
-    <div class="page-header">
+    <div v-show="isLoading" class="loading-overlay">
+      <img src="/img/loading/VZvw.gif" alt="Loading..." />
+    </div>
+    <div class="page-header" :class="{'content-disabled': isLoading}">
       <h3 class="fw-bold mb-3">카테고리 추가</h3>
     </div>
     <div class="row">
@@ -73,11 +76,13 @@
 <script setup>
 import {useRouter} from "nuxt/app";
 import {onMounted, reactive, ref} from "vue";
+import { useLoading } from '@/composables/useLoading';
 definePageMeta({
   layout: 'admin-default'
 });
 
 const router = useRouter();
+const { isLoading, startLoading, stopLoading } = useLoading();
 const state = reactive({
   parentCategoryIdx: '',
   categoryName: '',
@@ -115,7 +120,8 @@ const methods = {
         fileType: file.type
       }
     });
-    await $fetch('/api/category/insertChildCategoryInfo', {method:'post', body: state});
+    startLoading();
+    await $fetch('/api/category/insertChildCategoryInfo', {method:'post', body: state}).finally(() => stopLoading());
     router.back();
   },
   childCategoryAddCancel()  {
