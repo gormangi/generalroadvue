@@ -187,9 +187,6 @@ onMounted(() => {
 });
 
 const methods = {
-  closeSideNav() {
-    document.querySelector('html').classList.remove('nav_open');
-  },
   async renderTopCategoryList() {
     state.topCategoryList = await $fetch('/api/category/getAdminTopCategoryList', {method: 'post'});
   },

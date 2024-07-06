@@ -42,8 +42,8 @@
                       이미지 업로드
                     </button>
                     <input v-for="file in files" type="text" :value="file.name" class="form-control" readonly="readonly" aria-describedby="basic-addon1">
-                    <img v-for="file in files" :src="file.content" alt="" class="imagecheck-image">
                   </div>
+                  <img v-for="file in files" :src="file.content" alt="" class="imagecheck-image">
                 </div>
                 <br/>
                 <div class="form-group">
@@ -111,7 +111,10 @@ const methods = {
       categoryThumbnailRef.value.focus();
       return false;
     }
+    const exts = ['jpg', 'jpeg', 'png', 'gif'];
+    let extValid = true;
     files.value.forEach((file) => {
+      if (!exts.includes(file.name.split('.')[1])) extValid = false;
       state.categoryThumbnailVO = {
         fileContent: file.content,
         fileName: file.name,
@@ -120,6 +123,10 @@ const methods = {
         fileType: file.type
       }
     });
+    if (!extValid) {
+      alert('이미지 외에는 업로드 할 수 없습니다');
+      return false;
+    }
     startLoading();
     await $fetch('/api/category/insertChildCategoryInfo', {method:'post', body: state}).finally(() => stopLoading());
     router.back();

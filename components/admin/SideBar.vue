@@ -37,13 +37,13 @@
             <div class="collapsed" id="submenu">
               <ul class="nav nav-collapse">
                 <li>
-                  <NuxtLink to="/admin/AdminIndex"><span class="sub-item">카테고리 관리</span></NuxtLink>
+                  <a href="javascript:void(0)" @click="methods.goMenu('/admin/AdminIndex')"><span class="sub-item">카테고리 관리</span></a>
                 </li>
                 <li>
-                  <a href="javascript:void(0)"><span class="sub-item">상품 관리</span></a>
+                  <a href="javascript:void(0)" @click="methods.goMenu('/admin/ProductManagement')"><span class="sub-item">상품 관리</span></a>
                 </li>
                 <li>
-                  <a href="javascript:void(0)"><span class="sub-item">메인배너 관리</span></a>
+                  <a href="javascript:void(0)" @click="methods.goMenu('')"><span class="sub-item">메인배너 관리</span></a>
                 </li>
               </ul>
             </div>
@@ -55,7 +55,16 @@
 </template>
 
 <script setup>
+import {useRouter} from "nuxt/app";
 
+const router = useRouter();
+
+const methods = {
+  goMenu(location) {
+    router.push(location);
+    document.querySelector('html').classList.remove('nav_open');
+  }
+}
 </script>
 
 <style scoped>
