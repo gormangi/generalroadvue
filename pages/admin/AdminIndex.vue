@@ -1,5 +1,8 @@
 <template>
   <div class="page-inner">
+    <div v-show="isLoading" class="loading-overlay">
+      <img src="/img/loading/VZvw.gif" alt="Loading..." />
+    </div>
     <div class="page-header">
       <h3 class="fw-bold mb-3">카테고리 관리</h3>
     </div>
@@ -45,7 +48,7 @@
                         <td>{{ item.categoryName }}</td>
                         <td>{{ item.categoryOrder }}</td>
                         <td>{{ item.categoryUseYn }}</td>
-                        <td><button class="btn btn-primary btn-round" style="color:white" @click="methods.viewChildCategory(item)">{{ item.childCategoryCnt }} 개</button></td>
+                        <td><button class="btn btn-primary btn-round" style="color:white;font-size: 1em" @click="methods.viewChildCategory(item)">{{ item.childCategoryCnt }} 개</button></td>
                         <td>
                           <div class="form-button-action">
                             <button type="button" @click="methods.topCateModify(item.categoryIdx)" data-bs-toggle="tooltip" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
@@ -181,6 +184,7 @@ const childDragOptions = computed(() => {
   }
 });
 const childCategoryListRef = ref(null);
+const { isLoading, startLoading, stopLoading } = useLoading();
 
 onMounted(() => {
   methods.renderTopCategoryList();
@@ -233,7 +237,8 @@ const methods = {
       if (!confirm(item.categoryName + ' 카테고리를 삭제하시겠습니까?')) flag = false;
     }
     if (flag) {
-      await $fetch('/api/category/deleteTopCategory', {method: 'post', body: item});
+      startLoading();
+      await $fetch('/api/category/deleteTopCategory', {method: 'post', body: item}).finally(() => stopLoading());
       await methods.renderTopCategoryList();
       await methods.topCategorySort();
       state.childCategoryListShow = false;

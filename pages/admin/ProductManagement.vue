@@ -25,18 +25,27 @@
                   <th>상품명</th>
                   <th>원가</th>
                   <th>할인가</th>
-                  <th>표시통화</th>
                   <th>등록일</th>
+                  <th></th>
                 </tr>
                 </thead>
                 <tbody>
                   <template v-if="productList.length > 0">
                     <tr v-for="product in productList">
                       <td>{{product.productTitle}}</td>
-                      <td>{{product.productOriginPrice}}</td>
-                      <td>{{product.productDcPrice}}</td>
-                      <td>{{product.productCurrencyType}}</td>
+                      <td>{{product.productCurrencyType}} {{product.productOriginPrice}}</td>
+                      <td>{{product.productCurrencyType}} {{product.productDcPrice}}</td>
                       <td>{{product.productRegDate}}</td>
+                      <td>
+                        <div class="form-button-action">
+                          <button type="button" @click="methods.productModify(product.productIdx)" data-bs-toggle="tooltip" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
+                            <i class="fa fa-edit"></i>
+                          </button>
+                          <button type="button" @click="methods.productDelete(product.productIdx)" data-bs-toggle="tooltip" class="btn btn-link btn-danger" data-original-title="Remove">
+                            <i class="fa fa-times"></i>
+                          </button>
+                        </div>
+                      </td>
                     </tr>
                   </template>
                   <template v-else>
@@ -114,6 +123,17 @@ const methods = {
           }
         }
     ).finally(() => stopLoading());
+    data.productList.forEach((item) => {
+      if (item.productCurrencyType === '1') {
+        item.productCurrencyType = '￦';
+      } else if (item.productCurrencyType === '2') {
+        item.productCurrencyType = '＄';
+      } else if (item.productCurrencyType === '3') {
+        item.productCurrencyType = '￥';
+      } else if (item.productCurrencyType === '4') {
+        item.productCurrencyType = '€';
+      }
+    });
     productList.value = data.productList;
     pagination.value = data.pagination;
   },
@@ -135,7 +155,23 @@ const methods = {
   },
   productAdd() {
     router.push('/admin/ProductAdd');
+  },
+  productModify(productIdx) {
+    router.push({
+      path: '/admin/ProductModify',
+      query: {
+        productIdx: productIdx
+      }
+    });
+  },
+  async productDelete(productIdx) {
+    if(confirm('해당 상품을 삭제하시겠습니까?')) {
+      startLoading();
+      await $fetch('/api/product/productDelete', {method: 'post', body:productIdx}).finally(() => stopLoading());
+      await this.getProductList();
+    }
   }
+
 }
 </script>
 

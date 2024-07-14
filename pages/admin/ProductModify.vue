@@ -4,7 +4,7 @@
       <img src="/img/loading/VZvw.gif" alt="Loading..." />
     </div>
     <div class="page-header">
-      <h3 class="fw-bold mb-3">상품 추가</h3>
+      <h3 class="fw-bold mb-3">상품 수정</h3>
     </div>
     <div class="row">
       <div class="col-md-12">
@@ -109,7 +109,7 @@
             </div>
           </div>
           <div class="card-action">
-            <button type="button" @click="methods.productAdd" class="btn btn-success" style="margin-right:10px;">추가</button>
+            <button type="button" @click="methods.productModify" class="btn btn-success" style="margin-right:10px;">수정</button>
             <button type="button" @click="router.back()" class="btn btn-danger">취소</button>
           </div>
         </div>
@@ -122,13 +122,10 @@
 <script setup>
 import {useRouter} from "nuxt/app";
 import {computed, onMounted, ref} from "vue";
-import { QuillEditor } from '@vueup/vue-quill';
-import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 definePageMeta({
   layout: 'admin-default'
 });
-
 const router = useRouter();
 const { isLoading, startLoading, stopLoading } = useLoading();
 const productDetailEditOptions = {
@@ -172,6 +169,7 @@ const productDescEditOptions = {
   }
 };
 
+const receiveParam = router.currentRoute.value.query;
 const productThumbnailRef = ref(null);
 let productDetailRef = ref('');
 let productDescriptionRef = ref('');
@@ -202,10 +200,22 @@ const productCurrencySign = computed(() => {
 });
 
 onMounted(() => {
-  productCurrencyType.value = '1';
+  methods.modifyInit(receiveParam.productIdx);
 });
 
 const methods = {
+  async modifyInit(productIdx) {
+    startLoading();
+    const data = await $fetch('/api/product/getProductInfo', {method:'post', body: {productIdx}}).finally(() => stopLoading());
+    productTitle.value = data.productTitle;
+    previewThumbnailImgName.value = data.productThumbnailVO.originalFileName;
+    previewThumbnailImgSrc.value = data.productThumbnailVO.filePath;
+    productCurrencyType.value = data.productCurrencyType;
+    productOriginPrice.value = data.productOriginPrice;
+    productDcPrice.value = data.productDcPrice;
+    productDetailRef.value.setHTML(data.productDetail);
+    productDescriptionRef.value.setHTML(data.productDescription);
+  },
   thumbnailBtnClick() {
     productThumbnailRef.value.click();
   },
@@ -225,15 +235,9 @@ const methods = {
       productThumbnailVO.value['fileType'] = file.type;
     }
   },
-  async productAdd() {
-
+  async productModify() {
     if(!productTitle.value) {
       alert('상품명을 입력하세요');
-      return false;
-    }
-
-    if (Object.keys(productThumbnailVO.value).length === 0 && productThumbnailVO.value.constructor === Object) {
-      alert('썸네일을 반드시 등록해야 합니다');
       return false;
     }
 
@@ -251,6 +255,7 @@ const methods = {
     productDescription.value = productDescriptionRef.value.getHTML();
 
     const params = {
+      productIdx: receiveParam.productIdx,
       productTitle: productTitle.value,
       productThumbnailVO: productThumbnailVO.value,
       productCurrencyType: productCurrencyType.value,
@@ -261,9 +266,8 @@ const methods = {
     }
 
     startLoading();
-    await $fetch('/api/product/addProduct', {method:'post', body: params}).finally(() => stopLoading());
+    await $fetch('/api/product/modifyProduct', {method:'post', body: params}).finally(() => stopLoading());
     router.back();
-
   }
 }
 </script>
