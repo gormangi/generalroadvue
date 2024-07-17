@@ -32,3 +32,27 @@
     ]
   })
 </script>
+
+<style>
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 9999;
+  pointer-events: auto;
+}
+.loading-overlay img{
+  pointer-events: none;
+  height: 10%;
+}
+.content-disabled {
+  pointer-events: none; /* Prevent clicks on the content when loading */
+  opacity: 0.5; /* Optional: visually indicate that content is disabled */
+}
+</style>

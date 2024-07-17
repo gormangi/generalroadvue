@@ -16,7 +16,7 @@
                 <div class="dropdown-menu rounded-0 m-0">
                   <template v-for="i in mainChildCategoryList" key="childCategoryKey">
                     <template v-if="i.parentCategoryIdx === item.categoryIdx">
-                      <a href="javascript:void(0)" @click="moveProductList(item.categoryIdx)" class="dropdown-item">{{ i.categoryName }}</a>
+                      <a href="javascript:void(0)" @click="moveProductList(i.categoryIdx)" class="dropdown-item">{{ i.categoryName }}</a>
                     </template>
                   </template>
                 </div>
@@ -82,8 +82,12 @@
   });
 
   const moveProductList = (categoryIdx) => {
-    alert(categoryIdx);
-    router.push('/product/ProductList');
+    router.push({
+      path: '/product/ProductList',
+      query: {
+        categoryIdx: categoryIdx
+      }
+    });
   }
 </script>
 

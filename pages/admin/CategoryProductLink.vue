@@ -131,6 +131,7 @@
                   id="basic-datatables3"
                   class="display table table-striped table-hover"
                   ref="cateInProductListRef"
+                  style="min-width: 570px;"
               >
                 <thead>
                 <tr>
@@ -156,9 +157,6 @@
                           <div class="form-button-action">
                             <button type="button" @click="methods.productModify(item.PRODUCT_IDX)" data-bs-toggle="tooltip" class="btn btn-link btn-primary btn-lg" data-original-title="Edit Task">
                               <i class="fa fa-edit"></i>
-                            </button>
-                            <button type="button" @click="methods.productDelete(item.PRODUCT_IDX)" data-bs-toggle="tooltip" class="btn btn-link btn-danger" data-original-title="Remove">
-                              <i class="fa fa-times"></i>
                             </button>
                           </div>
                         </td>
@@ -299,17 +297,7 @@ const methods = {
         productIdx: PRODUCT_IDX
       }
     });
-  },
-
-  async productDelete(PRODUCT_IDX) {
-    if(confirm('해당 상품을 삭제하시겠습니까?')) {
-      startLoading();
-      await $fetch('/api/product/productDelete', {method: 'post', body:PRODUCT_IDX}).finally(() => stopLoading());
-      cateInProductListShow.value = false;
-      await this.init();
-    }
   }
-
 }
 </script>
 

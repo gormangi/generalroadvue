@@ -126,5 +126,4 @@
   pointer-events: none; /* Prevent clicks on the content when loading */
   opacity: 0.5; /* Optional: visually indicate that content is disabled */
 }
-
 </style>
