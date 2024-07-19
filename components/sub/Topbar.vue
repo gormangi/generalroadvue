@@ -11,8 +11,8 @@
       </div>
       <div class="col-lg-6 col-6 text-left">
         <div class="input-group">
-          <input type="text" class="form-control" placeholder="Search for products">
-          <div class="input-group-append">
+          <input type="text" class="form-control" placeholder="Search for products" v-model="searchKeyword" @keyup.enter="methods.productSearch" maxlength="30">
+          <div class="input-group-append" style="cursor: pointer;" @click="methods.productSearch">
             <span class="input-group-text bg-transparent text-primary">
                 <i class="fa fa-search"></i>
             </span>
@@ -22,3 +22,19 @@
     </div>
   </div>
 </template>
+
+<script setup>
+import {ref} from "vue";
+
+const searchKeyword = ref('');
+const methods = {
+  productSearch() {
+    if (searchKeyword.value !== '') {
+      window.location.href = '/product/Search?searchKeyword=' + searchKeyword.value;
+    } else {
+      alert('검색어를 입력하세요');
+      return false;
+    }
+  }
+}
+</script>

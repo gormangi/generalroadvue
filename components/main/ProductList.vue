@@ -7,7 +7,7 @@
       <div class="col-lg-3 col-md-6 col-sm-12 pb-1" v-for="product in cate.productList" :key="product.productIdx">
         <div class="card product-item border-0 mb-4">
           <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
-            <img class="img-fluid w-100" :src="product.productImgPath" alt="">
+            <a href="javascript:void(0)" @click="methods.moveProduct(product.productIdx)"><img class="img-fluid w-100" :src="product.productImgPath"/></a>
           </div>
           <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
             <h6 class="text-truncate mb-3" style="font-size: 0.9em">{{product.productTitle}}</h6>
@@ -19,7 +19,7 @@
             </div>
           </div>
           <div class="card-footer d-flex justify-content-between bg-light border">
-            <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
+            <a href="javascript:void(0)" @click="methods.moveProduct(product.productIdx)" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View Detail</a>
           </div>
         </div>
       </div>
@@ -29,13 +29,13 @@
 
 <script setup>
 import {computed} from "vue";
+import {useRouter} from "nuxt/app";
 
 const props = defineProps({
   mainProductList: {
     type: Array
   }
 });
-
 const computedMainProductList = computed(() => {
   let computedMainProductList = props.mainProductList;
   computedMainProductList.forEach((item) => {
@@ -55,10 +55,20 @@ const computedMainProductList = computed(() => {
   });
   return computedMainProductList;
 });
+const router = useRouter();
 
 const methods = {
   addComma(cost) {
     return cost.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+  },
+
+  moveProduct(productIdx) {
+    router.push({
+      path: '/product/Product',
+      query: {
+        productIdx: productIdx
+      }
+    });
   }
 }
 </script>

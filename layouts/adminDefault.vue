@@ -24,8 +24,10 @@
                 </div>
                 <input
                     type="text"
-                    placeholder="Search ..."
+                    placeholder="상품 검색"
                     class="form-control"
+                    v-model="searchKeyword"
+                    @keyup.enter="methods.searchProduct"
                 />
               </div>
             </nav>
@@ -45,7 +47,7 @@
   import SideBar from "/components/admin/SideBar";
   import LogoHeader from "/components/admin/LogoHeader";
   import Footer from "/components/admin/Footer";
-  import {onMounted} from "vue";
+  import {onMounted, ref} from "vue";
 
   useHead({
     title: 'GENERAL ROAD ADMIN',
@@ -63,20 +65,11 @@
     ],
     script: [
       {src: '/assets/js/plugin/webfont/webfont.min.js'},
-      //{src: '/assets/js/core/jquery-3.7.1.min.js'},
-      //{src: '/assets/js/core/popper.min.js'},
       {src: '/assets/js/core/bootstrap.min.js'}
-      //{src: '/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js'},
-      //{src: '/assets/js/plugin/chart.js/chart.min.js'},
-      //{src: '/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js'},
-      //{src: '/assets/js/plugin/chart-circle/circles.min.js'},
-      //{src: '/assets/js/plugin/datatables/datatables.min.js'},
-      //{src: '/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js'},
-      //{src: '/assets/js/plugin/jsvectormap/jsvectormap.min.js'},
-      //{src: '/assets/js/plugin/jsvectormap/world.js'},
-      //{src: '/assets/js/kaiadmin.min.js'}
     ]
-  })
+  });
+
+  const searchKeyword = ref('');
 
   onMounted(() => {
     WebFont.load({
@@ -99,6 +92,14 @@
   const methods = {
     closeSideNav() {
       document.querySelector('html').classList.remove('nav_open');
+    },
+    searchProduct() {
+      if (searchKeyword.value !== '') {
+        window.location.href = '/admin/ProductManagement?searchKeyword=' + searchKeyword.value;
+      } else {
+        alert('검색어를 입력하세요');
+        return false;
+      }
     }
   }
 

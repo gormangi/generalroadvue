@@ -12,7 +12,7 @@
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'user-scalable=yes, width=device-width, initial-scale=1' },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' }
     ],
@@ -55,4 +55,5 @@
   pointer-events: none; /* Prevent clicks on the content when loading */
   opacity: 0.5; /* Optional: visually indicate that content is disabled */
 }
+img{max-width:100%;}
 </style>

@@ -102,6 +102,7 @@ const computedPageArr = computed(() => {
   return arr;
 });
 const router = useRouter();
+const receiveParam = router.currentRoute.value.query;
 
 onMounted(() => {
   methods.getProductList();
@@ -119,7 +120,8 @@ const methods = {
               currentPage: currentPage.value,
               viewDataCnt: viewDataCnt.value,
               viewPageCnt: viewPageCnt.value
-            }
+            },
+            searchKeyword: receiveParam.searchKeyword
           }
         }
     ).finally(() => stopLoading());

@@ -3,21 +3,6 @@
     <div v-show="isLoading" class="loading-overlay">
       <img src="/img/loading/VZvw.gif" alt="Loading..." />
     </div>
-    <!-- Page Header Start -->
-    <div class="container-fluid bg-secondary mb-5" style="margin-bottom: 0px !important;">
-      <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 130px">
-        <h1 class="font-weight-semi-bold text-uppercase mb-1">{{state.categoryName}}</h1>
-        <template v-if="state.parentCategoryName">
-          <div class="d-inline-flex">
-            <p class="m-0">{{state.parentCategoryName}}</p>
-            <p class="m-0 px-2">-</p>
-            <p class="m-0">{{state.categoryName}}</p>
-          </div>
-        </template>
-      </div>
-    </div>
-    <!-- Page Header End -->
-
     <!-- Shop Start -->
     <div class="container-fluid pt-5">
       <div class="row px-xl-5">
@@ -25,29 +10,6 @@
         <!-- Shop Product Start -->
         <div class="col-lg-12 col-md-12">
           <div class="row pb-3">
-            <div class="col-12 pb-1">
-              <div class="d-flex align-items-center justify-content-between mb-4">
-                <div class="input-group" style="width:40%;">
-                  <input type="text" class="form-control" placeholder="Search by name" v-model="searchKeyword" @keyup.enter="methods.productSearch">
-                  <div class="input-group-append" style="cursor: pointer" @click="methods.productSearch">
-                    <span class="input-group-text bg-transparent text-primary">
-                        <i class="fa fa-search"></i>
-                    </span>
-                  </div>
-                </div>
-                <div class="dropdown ml-4">
-                  <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    {{sortKindText}}
-                  </button>
-                  <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
-                    <a class="dropdown-item" href="javascript:void(0)" @click="methods.productSortChange('regSort')">최신순</a>
-                    <a class="dropdown-item" href="javascript:void(0)" @click="methods.productSortChange('priceAscSort')">낮은가격순</a>
-                    <a class="dropdown-item" href="javascript:void(0)" @click="methods.productSortChange('priceDescSort')">높은가격순</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="col-lg-4 col-md-6 col-sm-12 pb-1" v-for="product in computedProductList" :key="product.productIdx">
               <div class="card product-item border-0 mb-4">
                 <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
@@ -94,7 +56,7 @@
             </template>
             <template v-else>
               <div class="col-12 pb-1" style="text-align: center;">
-                <span>등록된 상품이 없습니다.</span>
+                <span>검색된 상품이 없습니다.</span>
               </div>
             </template>
 
@@ -108,28 +70,20 @@
 </template>
 
 <script setup>
-import {computed, onMounted, reactive, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 import {useRouter} from "nuxt/app";
+
 definePageMeta({
   layout: 'sub-default'
 });
-
-const state = reactive({
-  categoryName: '',
-  parentCategoryName: ''
-});
+const { isLoading, startLoading, stopLoading } = useLoading();
 const router = useRouter();
 const receiveParam = router.currentRoute.value.query;
-const { isLoading, startLoading, stopLoading } = useLoading();
-
 let currentPage = ref(1);
 let viewDataCnt = ref(8);
 let viewPageCnt = ref(5);
 let productList = ref([]);
 let pagination = ref({});
-let searchKeyword = ref('');
-let sortKind = ref('regSort');
-
 const computedProductList = computed(() => {
   productList.value.forEach((i) => {
     i.productOriginPriceComma = methods.addComma(i.productOriginPrice);
@@ -151,59 +105,35 @@ const computedPageArr = computed(() => {
   for (let i = pagination.value.firstPage; i <= pagination.value.lastPage; i++) arr.push(i);
   return arr;
 });
-const sortKindText = computed(() => {
-  let res = '';
-  if (sortKind.value === 'regSort') {
-    res = '최신순';
-  } else if (sortKind.value === 'priceAscSort') {
-    res = '낮은가격순';
-  } else if (sortKind.value === 'priceDescSort') {
-    res = '높은가격순';
-  }
-  return res;
-});
 
 onMounted(async () => {
   startLoading();
-  await methods.getCategoryInfo();
   await methods.getProductList();
   stopLoading();
 });
 
 const methods = {
-  async getCategoryInfo() {
-    const data = await $fetch('/api/category/getCategoryInfo',  {method: 'post', body: receiveParam.categoryIdx});
-    state.categoryName = data.categoryName;
-    if (data.categoryDept > 1) {
-      state.parentCategoryName = data.parentCategoryName;
-    }
-  },
-
   async getProductList() {
     const data = await $fetch(
-      '/api/product/getB2CProductList',
-      {
-        method:'post',
-        body:{
-          pagination:{
-            currentPage: currentPage.value,
-            viewDataCnt: viewDataCnt.value,
-            viewPageCnt: viewPageCnt.value
-          },
-          categoryIdx: receiveParam.categoryIdx,
-          searchKeyword: searchKeyword.value,
-          sortKind: sortKind.value
+        '/api/product/getB2CProductList',
+        {
+          method: 'post',
+          body: {
+            pagination: {
+              currentPage: currentPage.value,
+              viewDataCnt: viewDataCnt.value,
+              viewPageCnt: viewPageCnt.value
+            },
+            searchKeyword: receiveParam.searchKeyword
+          }
         }
-      }
     );
     productList.value = data.productList;
     pagination.value = data.pagination;
   },
-
   addComma(cost) {
     return cost.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
   },
-
   renderPrevPage() {
     if (currentPage.value > 1) {
       currentPage.value = currentPage.value - 1;
@@ -220,17 +150,6 @@ const methods = {
       this.getProductList();
     }
   },
-  async productSearch() {
-    startLoading();
-    await this.getProductList();
-    stopLoading();
-  },
-  async productSortChange(chooseSortKind) {
-    sortKind.value = chooseSortKind;
-    startLoading();
-    await this.getProductList();
-    stopLoading();
-  },
   moveProduct(productIdx) {
     router.push({
       path: '/product/Product',
@@ -241,3 +160,7 @@ const methods = {
   }
 }
 </script>
+
+<style scoped>
+
+</style>
