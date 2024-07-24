@@ -62,6 +62,12 @@
             </div>
           </div>
           <div class="card-body">
+            <div style="text-align: right">
+              <label for="basic-datatables2-search" style="padding-right: 10px">Search:</label>
+              <input type="search" v-model="chooseProductListParam.searchKeyword" @keyup.enter="methods.chooseProductList(chooseProductListCategoryIdx)" id="basic-datatables2-search" class="form-control form-control-sm" style="display: inline;width:30%;"/>
+              <button class="btn btn-primary btn-xs" style="margin: 0 3px 0 6px;" @click="methods.chooseProductList(chooseProductListCategoryIdx)">검색</button>
+              <button class="btn btn-primary btn-xs" @click="methods.chooseProductListReset(chooseProductListCategoryIdx)">초기화</button>
+            </div>
             <div class="table-responsive">
               <table
                   id="basic-datatables2"
@@ -91,7 +97,7 @@
                 </template>
                 <template v-else>
                   <tr>
-                    <td colspan="2" style="text-align: center">등록된 상품이 없습니다</td>
+                    <td colspan="2" style="text-align: center">표시할 상품이 없습니다</td>
                   </tr>
                 </template>
               </table>
@@ -200,7 +206,8 @@ const cateInProductList = ref([]);
 const chooseProductListParam = ref({
   currentPage: 1,
   viewDataCnt: 5,
-  viewPageCnt: 5
+  viewPageCnt: 5,
+  searchKeyword: ''
 });
 const chooseProductPagination = ref({});
 const chooseProductComputedPageArr = computed(() => {
@@ -242,13 +249,18 @@ const methods = {
             viewDataCnt: chooseProductListParam.value.viewDataCnt,
             viewPageCnt: chooseProductListParam.value.viewPageCnt
           },
-          categoryIdx: chooseProductListCategoryIdx.value
+          categoryIdx: chooseProductListCategoryIdx.value,
+          searchKeyword: chooseProductListParam.value.searchKeyword
         }
       }
     ).finally(() => stopLoading());
     chooseProductList.value = data.productList;
     chooseProductPagination.value = data.pagination;
     chooseProductListRef.value?.scrollIntoView({behavior: 'smooth'});
+  },
+  async chooseProductListReset(categoryIdx) {
+    chooseProductListParam.value.searchKeyword = '';
+    await methods.chooseProductList(categoryIdx);
   },
   renderChooseProductPrevPage() {
     if (chooseProductListParam.value.currentPage > 1) {

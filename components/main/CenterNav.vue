@@ -31,37 +31,42 @@
     </nav>
     <div id="header-carousel" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
-        <div class="carousel-item active" style="height: 410px;">
-          <img class="img-fluid" src="/img/bottega/bottega.jpg" alt="Image">
-          <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-            <div class="p-3" style="max-width: 700px;">
-              <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
-              <h3 class="display-4 text-white font-weight-semi-bold mb-4">Fashionable Dress</h3>
-              <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+        <template v-if="mainBannerList.length > 0">
+          <div class="carousel-item" :class="idx === 0 ? 'active' : ''" style="height: 410px;" v-for="(banner, idx) in mainBannerList">
+            <img class="img-fluid" :src="banner.bannerImgVO.filePath" alt="Image">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+              <div class="p-3" style="max-width: 700px;">
+                <h4 class="text-light text-uppercase font-weight-medium mb-3">{{banner.bannerSubTitle}}</h4>
+                <h3 class="display-4 text-white font-weight-semi-bold mb-4">{{banner.bannerTitle}}</h3>
+                <a href="javascript:void(0)" @click="moveProductList(banner.categoryIdx)" class="btn btn-light py-2 px-3">Shop Now</a>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="carousel-item" style="height: 410px;">
-          <img class="img-fluid" src="/img/hermes/hermes.jpg" alt="Image">
-          <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
-            <div class="p-3" style="max-width: 700px;">
-              <h4 class="text-light text-uppercase font-weight-medium mb-3">10% Off Your First Order</h4>
-              <h3 class="display-4 text-white font-weight-semi-bold mb-4">Reasonable Price</h3>
-              <a href="" class="btn btn-light py-2 px-3">Shop Now</a>
+        </template>
+        <template v-else>
+          <div class="carousel-item active" style="height: 410px;">
+            <img class="img-fluid" src="/img/standardBanner.png" alt="Image">
+            <div class="carousel-caption d-flex flex-column align-items-center justify-content-center">
+              <div class="p-3" style="max-width: 700px;">
+                <h4 class="text-light text-uppercase font-weight-medium mb-3">General Road Shop</h4>
+                <h3 class="display-4 text-white font-weight-semi-bold mb-4">오픈런 없이 합리적인 가격 편안한 명품 쇼핑</h3>
+              </div>
             </div>
           </div>
-        </div>
+        </template>
       </div>
-      <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
-        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-          <span class="carousel-control-prev-icon mb-n2"></span>
-        </div>
-      </a>
-      <a class="carousel-control-next" href="#header-carousel" data-slide="next">
-        <div class="btn btn-dark" style="width: 45px; height: 45px;">
-          <span class="carousel-control-next-icon mb-n2"></span>
-        </div>
-      </a>
+      <template v-if="mainBannerList.length > 1">
+        <a class="carousel-control-prev" href="#header-carousel" data-slide="prev">
+          <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-prev-icon mb-n2"></span>
+          </div>
+        </a>
+        <a class="carousel-control-next" href="#header-carousel" data-slide="next">
+          <div class="btn btn-dark" style="width: 45px; height: 45px;">
+            <span class="carousel-control-next-icon mb-n2"></span>
+          </div>
+        </a>
+      </template>
     </div>
   </div>
 </template>
@@ -69,6 +74,7 @@
 <script setup>
 
   import {useRouter} from "nuxt/app";
+  import {onMounted} from "vue";
 
   const router = useRouter();
 
@@ -77,6 +83,9 @@
       type: Array
     },
     mainChildCategoryList: {
+      type: Array
+    },
+    mainBannerList: {
       type: Array
     }
   });

@@ -8,7 +8,7 @@
     <div class="container-fluid mb-5">
       <div class="row border-top px-xl-5">
         <LeftNav :mainTopCategoryList="state.mainTopCategoryList" :mainChildCategoryList="state.mainChildCategoryList"/>
-        <CenterNav :mainTopCategoryList="state.mainTopCategoryList" :mainChildCategoryList="state.mainChildCategoryList"/>
+        <CenterNav :mainTopCategoryList="state.mainTopCategoryList" :mainChildCategoryList="state.mainChildCategoryList" :mainBannerList="state.mainBannerList"/>
       </div>
     </div>
     <!-- Navbar End -->
@@ -45,7 +45,8 @@ const state = reactive({
   mainTopCategoryList: [],
   mainChildCategoryList: [],
   mainCategoryList: [],
-  mainProductList: []
+  mainProductList: [],
+  mainBannerList: []
 });
 
 const { data, refresh, error } = await useAsyncData('indexAsyncData', () => $fetch('/api/main'));
@@ -53,5 +54,6 @@ state.mainTopCategoryList = data.value.mainTopCategoryList;
 state.mainChildCategoryList = data.value.mainChildCategoryList;
 state.mainCategoryList = data.value.mainCategoryList;
 state.mainProductList = data.value.mainProductList;
+state.mainBannerList = data.value.mainBannerList;
 
 </script>
