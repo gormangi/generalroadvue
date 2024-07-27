@@ -31,6 +31,7 @@
                 />
               </div>
             </nav>
+            <button class="btn btn-primary btn-xs ms-auto" @click="methods.logout">LOGOUT</button>
           </div>
         </nav>
         <!-- End Navbar -->
@@ -47,7 +48,7 @@
   import SideBar from "/components/admin/SideBar";
   import LogoHeader from "/components/admin/LogoHeader";
   import Footer from "/components/admin/Footer";
-  import {onMounted, ref} from "vue";
+  import {onBeforeMount, onMounted, ref} from "vue";
 
   useHead({
     title: 'GENERAL ROAD ADMIN',
@@ -70,6 +71,10 @@
   });
 
   const searchKeyword = ref('');
+
+  onBeforeMount(() => {
+    methods.lginCk();
+  });
 
   onMounted(() => {
     WebFont.load({
@@ -100,6 +105,13 @@
         alert('검색어를 입력하세요');
         return false;
       }
+    },
+    async lginCk() {
+      if (await $fetch('/api/lginCk', {method:'post'}) < 1) window.location.href = '/admin/Login';
+    },
+    async logout() {
+      await $fetch('/api/lgout', {method: 'post'});
+      window.location.reload();
     }
   }
 
