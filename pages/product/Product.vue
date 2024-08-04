@@ -12,8 +12,8 @@
       </div>
       <div class="col-lg-7 pb-5">
         <h3 class="font-weight-semi-bold">{{productDetail.productTitle}}</h3>
-        <h3 class="font-weight-semi-bold mb-4" style="display: inline;margin-right: 8px; color: darkblue">{{productDetail.productCurrencySign}}{{productDetail.productDcPriceComma}}</h3>
-        <del v-show="productDetail.productOriginPrice !== productDetail.productDcPrice">{{productDetail.productCurrencySign}}{{productDetail.productOriginPriceComma}}</del>
+        <h3 class="font-weight-semi-bold mb-4" style="display: inline;margin-right: 8px; color: darkblue">{{productDetail.productCurrencySign}}{{productDetail.productDcPrice}}</h3>
+        <del v-show="productDetail.productOriginPrice !== productDetail.productDcPrice">{{productDetail.productCurrencySign}}{{productDetail.productOriginPrice}}</del>
         <br/><br/>
         <span class="mb-4" v-html="productDetail.productDescription"></span>
       </div>
@@ -44,20 +44,6 @@ const router = useRouter();
 const receiveParam = router.currentRoute.value.query;
 const { isLoading, startLoading, stopLoading } = useLoading();
 const productDetail = ref({});
-const computedProductDetail = computed(() => {
-  productDetail.value.productOriginPriceComma = methods.addComma(productDetail.value.productOriginPrice);
-  productDetail.value.productDcPriceComma = methods.addComma(productDetail.value.productDcPrice);
-  if (productDetail.value.productCurrencyType === '1') {
-    productDetail.value.productCurrencySign = '￦';
-  } else if (productDetail.value.productCurrencyType === '2') {
-    productDetail.value.productCurrencySign = '＄';
-  } else if (productDetail.value.productCurrencyType === '3') {
-    productDetail.value.productCurrencySign = '￥';
-  } else if (productDetail.value.productCurrencyType === '4') {
-    productDetail.value.productCurrencySign = '€';
-  }
-  return productDetail.value;
-});
 
 onMounted(async () => {
   startLoading();
@@ -68,6 +54,18 @@ onMounted(async () => {
 const methods = {
   async getProductDetail() {
     productDetail.value = await $fetch('/api/product/getProductDetail', {method: 'post', body: receiveParam.productIdx});
+
+    productDetail.value.productOriginPrice = methods.addComma(productDetail.value.productOriginPrice);
+    productDetail.value.productDcPrice = methods.addComma(productDetail.value.productDcPrice);
+    if (productDetail.value.productCurrencyType === '1') {
+      productDetail.value.productCurrencySign = '￦';
+    } else if (productDetail.value.productCurrencyType === '2') {
+      productDetail.value.productCurrencySign = '＄';
+    } else if (productDetail.value.productCurrencyType === '3') {
+      productDetail.value.productCurrencySign = '￥';
+    } else if (productDetail.value.productCurrencyType === '4') {
+      productDetail.value.productCurrencySign = '€';
+    }
   },
 
   addComma(cost) {

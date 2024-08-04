@@ -1,5 +1,8 @@
 <template>
   <div class="sidebar" data-background-color="dark">
+    <div v-show="isLoading" class="loading-overlay">
+      <img src="/img/loading/VZvw.gif" alt="Loading..." />
+    </div>
     <div class="sidebar-logo">
       <!-- Logo Header -->
       <div class="logo-header" data-background-color="dark">
@@ -48,6 +51,9 @@
                 <li>
                   <a href="javascript:void(0)" @click="methods.goMenu('/admin/banerManagement')"><span class="sub-item">메인배너 관리</span></a>
                 </li>
+                <li>
+                  <a href="javascript:void(0)" @click="methods.allClear"><span class="sub-item">전체 초기화</span></a>
+                </li>
               </ul>
             </div>
           </li>
@@ -61,11 +67,24 @@
 import {useRouter} from "nuxt/app";
 
 const router = useRouter();
+const { isLoading, startLoading, stopLoading } = useLoading();
 
 const methods = {
   goMenu(location) {
     router.push(location);
     document.querySelector('html').classList.remove('nav_open');
+  },
+  async allClear() {
+    if (confirm('전체 초기화를 실행합니다\n\r모든 카테고리, 모든상품, 모든배너가 삭제됩니다')) {
+      if (confirm('삭제 후에는 복구할수없습니다 실행 하시겠습니까?')) {
+        startLoading();
+        await $fetch('/api/allClear', {method:'post'}).finally(() => {
+          stopLoading();
+          alert('전체 초기화가 완료되었습니다');
+          this.goMenu('/admin/AdminIndex');
+        });
+      }
+    }
   }
 }
 </script>

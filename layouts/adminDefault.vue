@@ -112,7 +112,7 @@
     async logout() {
       await $fetch('/api/lgout', {method: 'post'});
       window.location.reload();
-    }
+    },
   }
 
 </script>
